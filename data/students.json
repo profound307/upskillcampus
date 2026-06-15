@@ -1,0 +1,86 @@
+[
+    {
+        "student_id": "STD1001",
+        "name": "John Doe",
+        "age": 20,
+        "gender": "Male",
+        "course": "Computer Science",
+        "marks": 85.5,
+        "email": "john.doe@example.com",
+        "description": "No description provided.",
+        "grade": "B",
+        "status": "Pass"
+    },
+    {
+        "student_id": "STD1002",
+        "name": "Jane Smith",
+        "age": 21,
+        "gender": "Female",
+        "course": "Data Science",
+        "marks": 92.0,
+        "email": "jane.smith@example.com",
+        "description": "No description provided.",
+        "grade": "A",
+        "status": "Pass"
+    },
+    {
+        "student_id": "STD1003",
+        "name": "Robert Johnson",
+        "age": 22,
+        "gender": "Male",
+        "course": "Computer Science",
+        "marks": 74.0,
+        "email": "robert.j@example.com",
+        "description": "No description provided.",
+        "grade": "C",
+        "status": "Pass"
+    },
+    {
+        "student_id": "STD1004",
+        "name": "Emily Davis",
+        "age": 19,
+        "gender": "Female",
+        "course": "Bioinformatics",
+        "marks": 61.5,
+        "email": "emily.davis@example.com",
+        "description": "No description provided.",
+        "grade": "D",
+        "status": "Pass"
+    },
+    {
+        "student_id": "STD1005",
+        "name": "Michael Wilson",
+        "age": 20,
+        "gender": "Male",
+        "course": "Physics",
+        "marks": 38.0,
+        "email": "michael.w@example.com",
+        "description": "No description provided.",
+        "grade": "F",
+        "status": "Fail"
+    },
+    {
+        "student_id": "STD1006",
+        "name": "Alice Brown",
+        "age": 21,
+        "gender": "Female",
+        "course": "Chemistry",
+        "marks": 88.0,
+        "email": "alice.brown@example.com",
+        "description": "No description provided.",
+        "grade": "B",
+        "status": "Pass"
+    },
+    {
+        "student_id": "STD5005",
+        "name": "Marcus Aurelius",
+        "age": 21,
+        "gender": "Male",
+        "course": "Philosophy",
+        "marks": 88.5,
+        "email": "marcus.aurelius@example.com",
+        "description": "Showing exceptional interest in ethics and logic. Excellent attendance.",
+        "grade": "B",
+        "status": "Pass"
+    }
+]

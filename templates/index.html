@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Glassmorphism Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="background-decor">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="glass-panel main-header">
+            <div class="header-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <h1>SMS <span>Portal</span></h1>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <nav class="header-tabs">
+                <button class="tab-btn active" id="tab-records" onclick="switchTab('records')">
+                    <i class="fa-solid fa-table-list"></i> Records
+                </button>
+                <button class="tab-btn" id="tab-analytics" onclick="switchTab('analytics')">
+                    <i class="fa-solid fa-chart-line"></i> Analytics
+                </button>
+            </nav>
+
+            <div class="header-actions">
+                <div class="search-box" id="header-search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-input" placeholder="Search by Student ID or Name..." oninput="filterStudents()">
+                </div>
+                <button class="btn btn-primary" onclick="openAddModal()">
+                    <i class="fa-solid fa-user-plus"></i> Add Student
+                </button>
+            </div>
+        </header>
+
+        <!-- Records View Section -->
+        <div id="records-view" class="view-panel">
+            <!-- Stats Section -->
+            <section class="stats-grid">
+                <div class="glass-panel stats-card">
+                    <div class="stats-icon icon-blue">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3 id="stat-total">0</h3>
+                        <p>Total Students</p>
+                    </div>
+                </div>
+                
+                <div class="glass-panel stats-card">
+                    <div class="stats-icon icon-purple">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3 id="stat-average">0.0</h3>
+                        <p>Average Marks</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel stats-card">
+                    <div class="stats-icon icon-pink">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3 id="stat-courses">0</h3>
+                        <p>Active Courses</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Table Card -->
+            <main class="glass-panel data-panel">
+                <div class="panel-header">
+                    <h2>Student Records</h2>
+                    <div class="sort-actions">
+                        <span>Sort by:</span>
+                        <button class="btn btn-text" id="sort-name-btn" onclick="toggleSort('name')">
+                            Name <i class="fa-solid fa-sort"></i>
+                        </button>
+                        <button class="btn btn-text" id="sort-marks-btn" onclick="toggleSort('marks')">
+                            Marks <i class="fa-solid fa-sort"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="students-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Course</th>
+                                <th>Marks</th>
+                                <th>Grade</th>
+                                <th>Status</th>
+                                <th>Email</th>
+                                <th>Description</th>
+                                <th class="actions-col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-tbody">
+                            <!-- Filled by JS -->
+                        </tbody>
+                    </table>
+                    <div id="no-records-msg" class="empty-state hidden">
+                        <i class="fa-regular fa-folder-open"></i>
+                        <p>No student records found matching your query.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Analytics View Section -->
+        <div id="analytics-view" class="view-panel hidden">
+            <!-- Analytics Summary Stats -->
+            <section class="stats-grid">
+                <div class="glass-panel stats-card">
+                    <div class="stats-icon icon-blue">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3 id="analytics-total">0</h3>
+                        <p>Total Enrolled</p>
+                    </div>
+                </div>
+                <div class="glass-panel stats-card">
+                    <div class="stats-icon icon-purple">
+                        <i class="fa-solid fa-chart-bar"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3 id="analytics-average">0.0</h3>
+                        <p>Class Average</p>
+                    </div>
+                </div>
+                <div class="glass-panel stats-card">
+                    <div class="stats-icon icon-green">
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3 id="analytics-pass-rate">0.0%</h3>
+                        <p>Pass Rate</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="analytics-row">
+                <!-- Grade Distribution Card -->
+                <div class="glass-panel chart-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-ranking-star"></i> Grade Distribution</h2>
+                        <p class="sub-label">Student counts by letter grade</p>
+                    </div>
+                    <div class="chart-container" id="grade-chart-container">
+                        <!-- Filled dynamically by JS -->
+                    </div>
+                </div>
+
+                <!-- Pass vs Fail Status Card -->
+                <div class="glass-panel chart-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-circle-half-stroke"></i> Pass vs Fail Status</h2>
+                        <p class="sub-label">Comparison of passing & failing students</p>
+                    </div>
+                    <div class="pass-fail-progress-container">
+                        <div class="progress-labels">
+                            <span class="pass-label"><i class="fa-solid fa-circle text-green"></i> Pass (<span id="pass-count">0</span>)</span>
+                            <span class="fail-label"><i class="fa-solid fa-circle text-red"></i> Fail (<span id="fail-count">0</span>)</span>
+                        </div>
+                        <div class="progress-bar-track">
+                            <div class="progress-bar-fill pass-fill" id="pass-bar-fill" style="width: 0%"></div>
+                            <div class="progress-bar-fill fail-fill" id="fail-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-percentage-display">
+                            <span id="pass-percentage">0%</span> of enrolled class passing
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Performance Analytics -->
+            <div class="glass-panel data-panel analytics-table-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-book-bookmark"></i> Course Performance Analytics</h2>
+                    <p class="sub-label">Enrolled counts, average scores, and pass metrics by course area</p>
+                </div>
+                <div class="table-container">
+                    <table class="analytics-table">
+                        <thead>
+                            <tr>
+                                <th>Course Title</th>
+                                <th>Students Enrolled</th>
+                                <th>Average Marks</th>
+                                <th>Passed Count</th>
+                                <th>Pass Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="course-analytics-tbody">
+                            <!-- Filled dynamically by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Modal (Add/Edit) -->
+    <div class="modal-overlay hidden" id="student-modal">
+        <div class="glass-panel modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Student</h2>
+                <button class="close-btn" onclick="closeStudentModal()">&times;</button>
+            </div>
+            <form id="student-form" onsubmit="saveStudent(event)">
+                <input type="hidden" id="form-action" value="add"> <!-- "add" or "edit" -->
+                
+                <div class="form-group">
+                    <label for="student_id">Student ID</label>
+                    <input type="text" id="student_id" required placeholder="e.g., STD1001">
+                    <small class="error-msg" id="err-student_id"></small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" required placeholder="e.g., Jane Doe">
+                        <small class="error-msg" id="err-name"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" required min="1" placeholder="e.g., 20">
+                        <small class="error-msg" id="err-age"></small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <small class="error-msg" id="err-gender"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="course">Course</label>
+                        <input type="text" id="course" required placeholder="e.g., Computer Science">
+                        <small class="error-msg" id="err-course"></small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="marks">Marks</label>
+                        <input type="number" id="marks" required min="0" max="100" step="0.1" placeholder="0 - 100">
+                        <small class="error-msg" id="err-marks"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required placeholder="e.g., jane@example.com">
+                        <small class="error-msg" id="err-email"></small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Remarks / Profile Description</label>
+                    <textarea id="description" required placeholder="Enter student notes, remarks, profile observations..." maxlength="200" rows="3"></textarea>
+                    <small class="error-msg" id="err-description"></small>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeStudentModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal-overlay hidden" id="delete-modal">
+        <div class="glass-panel modal-content delete-modal-content">
+            <div class="modal-header">
+                <h2>Confirm Deletion</h2>
+                <button class="close-btn" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <div class="delete-body">
+                <i class="fa-solid fa-triangle-exclamation warning-icon"></i>
+                <p>Are you sure you want to permanently delete student <strong id="delete-student-name"></strong> (ID: <span id="delete-student-id"></span>)?</p>
+                <p class="warning-text">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Notification (Toast) -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Web logic script -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
